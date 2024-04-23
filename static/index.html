@@ -1,0 +1,35 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Feed</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript">
+        window.addEventListener("load", (event) => {
+            ws = new WebSocket("/subscribe");
+            feed = document.getElementById("feed");
+            clear = document.getElementById("clear");
+            ws.onmessage = (event) => {
+                logline = document.createElement("div");
+                logline.classList.add("logline");
+                logline.innerText = event.data;
+                feed.appendChild(logline);
+            };
+            clear.onclick = (event) => {
+                feed.innerText = "";
+            };
+        });
+    </script>
+</head>
+<body>
+    <div id="page-content">
+        <div id="heading">
+            <h1>Log Feed</h1>
+            <button id="clear">Clear</button>
+        </div>
+        <div id="feed-container">
+            <div id="feed"></div>
+        </div>
+    </div>
+</body>
+</html>

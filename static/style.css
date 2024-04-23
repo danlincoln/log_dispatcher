@@ -1,0 +1,46 @@
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    font-family: "Arial";
+    padding: 0;
+    margin: 0;
+    background-color: #eee;
+}
+
+#page-content {
+    display: flex;
+    flex: 1;
+}
+
+#heading {
+    flex: 1 50px;
+    text-align: center;
+}
+
+#feed-container {
+    display: flex;
+    flex: 4 200px;
+    padding: 1em;
+}
+
+#feed {
+    border: 1px solid #333;
+    background-color: white;
+    border-radius: 4px;
+    padding: 0.5em;
+    flex-grow: 1;
+}
+
+.logline {
+    margin-bottom: 4px;
+}
+
+button {
+    font-size: 110%;
+    color: aliceblue;
+    padding: 5px 20px;
+    background-color: darkcyan;
+    border: 1px solid #999;
+    border-radius: 4px;
+}
