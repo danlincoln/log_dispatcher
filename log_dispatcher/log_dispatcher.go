@@ -59,7 +59,7 @@ func (ds *dispatchServer) publishHandler(w http.ResponseWriter,
 		return
 	}
 
-	timestamp := []byte(time.Now().Format(time.RFC822Z) + " ")
+	timestamp := []byte(time.Now().Format(time.RFC1123) + " ")
 	msg := append(timestamp, logJson...)
 
 	ds.publish(msg)
