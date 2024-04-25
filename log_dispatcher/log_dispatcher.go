@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/IBM/sarama"
 	"golang.org/x/net/websocket"
 )
 
@@ -17,6 +18,7 @@ type dispatchServer struct {
 	subscribers     map[*subscriber]bool
 	messageBuffer   int
 	logfile         string
+	producer        sarama.AsyncProducer
 }
 
 type subscriber struct {
@@ -24,10 +26,15 @@ type subscriber struct {
 }
 
 func newDispatchServer() *dispatchServer {
+	producer, err := sarama.NewAsyncProducer([]string{"kafka:9092"}, nil)
+	if err != nil {
+		panic(err)
+	}
 	ds := &dispatchServer{
 		messageBuffer: 16,
 		subscribers:   make(map[*subscriber]bool),
 		logfile:       "service.log",
+		producer:      producer,
 	}
 	ds.serveMux.Handle("/", http.FileServer(http.Dir("./static")))
 	ds.serveMux.HandleFunc("/publish", ds.publishHandler)
@@ -75,6 +82,8 @@ func (ds *dispatchServer) publish(msg []byte) {
 		}
 		file.Write(msg)
 	}()
+
+	ds.producer.Input() <- &sarama.ProducerMessage{Topic: "logs", Value: sarama.StringEncoder(msg)}
 
 	// Websocket subscribers
 	for s := range ds.subscribers {
