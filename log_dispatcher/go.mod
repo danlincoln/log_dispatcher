@@ -1,4 +1,4 @@
-module log_dispatcher
+module dispatchServer
 
 go 1.22.2
 
