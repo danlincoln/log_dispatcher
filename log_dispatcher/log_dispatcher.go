@@ -83,7 +83,9 @@ func (ds *dispatchServer) publish(msg []byte) {
 		file.Write(msg)
 	}()
 
-	ds.producer.Input() <- &sarama.ProducerMessage{Topic: "logs", Value: sarama.StringEncoder(msg)}
+	// Kafka producer
+	ds.producer.Input() <- &sarama.ProducerMessage{Topic: "logs",
+		Value: sarama.StringEncoder(msg)}
 
 	// Websocket subscribers
 	for s := range ds.subscribers {

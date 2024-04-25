@@ -1,0 +1,29 @@
+services:
+  kafka:
+    image: &kafka-image bitnami/kafka:latest
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    healthcheck:
+      test: ["CMD", "/opt/bitnami/kafka/bin/kafka-topics.sh", "--bootstrap-server=localhost:9092", "--list"]
+      interval: 10s
+      start_period: 30s
+  
+  init-kafka:
+    image: *kafka-image
+    entrypoint: /bin/bash
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: |
+      /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic logs --bootstrap-server kafka:9092
+
+  log_dispatcher:
+    build: ./log_dispatcher
+    ports:
+      - "8080:8080"
+    
