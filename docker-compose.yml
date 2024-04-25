@@ -20,7 +20,7 @@ services:
       kafka:
         condition: service_healthy
     command: |
-      /opt/bitnami/kafka/bin/kafka-topics.sh --create --topic logs --bootstrap-server kafka:9092
+      /opt/bitnami/kafka/bin/kafka-topics.sh --create --if-not-exists --topic logs --bootstrap-server kafka:9092
 
   log_dispatcher:
     build: ./log_dispatcher
