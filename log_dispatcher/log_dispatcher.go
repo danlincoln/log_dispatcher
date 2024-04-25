@@ -61,7 +61,6 @@ func (ds *dispatchServer) publishHandler(w http.ResponseWriter,
 
 	timestamp := []byte(time.Now().Format(time.RFC822Z) + " ")
 	msg := append(timestamp, logJson...)
-	msg = append(msg, "\n"...)
 
 	ds.publish(msg)
 
@@ -81,6 +80,7 @@ func (ds *dispatchServer) publish(msg []byte) {
 			log.Print(err)
 		}
 		file.Write(msg)
+		file.Write([]byte("\n"))
 	}()
 
 	// Kafka producer
